@@ -38,7 +38,7 @@ public class Triangulate {
 	}
 
 	/**
-	 * Revisa si un punto p se encuentra dentro del circulo concentrico de un
+	 * Revisa si un punto p se encuentra dentro de la circunferencia circunscrita de un
 	 * triangulo t. Si el punto se encuentra justo en el borde de la
 	 * circunferencia se considerara dentro del circulo. Asi se evitan esos
 	 * casos particulares. El proceso se realiza mediante la obtencion de la
@@ -51,11 +51,11 @@ public class Triangulate {
 	 * @param t
 	 *            El triangulo a revisar
 	 * @param circle
-	 *            El punto que servira para establecer el centro del circulo
-	 *            concentrico. Se modifica durante el proceso, por lo que no
+	 *            El punto que servira para establecer el centro de la circunferencia
+	 *            circunscrita. Se modifica durante el proceso, por lo que no
 	 *            importa lo que contenga al ser pasado a la funcion
-	 * @return Verdadero si el punto p se encuentra dentro del circulo
-	 *         concentrico del triangulo t
+	 * @return Verdadero si el punto p se encuentra dentro de la circunferencia
+	 *         circunscrita del triangulo t
 	 */
 	private static boolean circumCircle(Point p, Triangle t, Point circle) {
 
@@ -150,7 +150,7 @@ public class Triangulate {
 		float xmid = (xmax + xmin) / 2.0f;
 		float ymid = (ymax + ymin) / 2.0f;
 
-		/* Triangulos que aun deben revisarse */
+		/* Triangulos */
 		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
 		/* Triangulos listos (cumplen condicion Delaunay) */
 		HashSet<Triangle> complete = new HashSet<Triangle>();
@@ -178,15 +178,14 @@ public class Triangulate {
 			edges.clear();
 
 			/*
-			 * Prepara el buffer de aristas. Si el punto p esta dentro del
-			 * circulo concentrico del triangulo, entonces las aristas de ese
+			 * Prepara el buffer de aristas. Si el punto p esta dentro de la
+			 * circunferencia circunscrita del triangulo, entonces las aristas de ese
 			 * triangulo se agregan al buffer y el triangulo se elimina de la
 			 * lista de triangulos.
 			 */
 			Point circle = new Point();
 
 			for (int j = triangles.size() - 1; j >= 0; j--) {
-
 				Triangle t = (Triangle) triangles.get(j);
 				if (complete.contains(t)) {
 					continue;
