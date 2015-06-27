@@ -77,7 +77,7 @@ public class TriangulationPanel extends JPanel implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Point p = new Point(e.getX(), e.getY());
-		/* Don't allow duplicated points */
+		/* No se permiten puntos duplicados */
 		if (!points.contains(p)) {
 			points.add(p);
 		} else {
