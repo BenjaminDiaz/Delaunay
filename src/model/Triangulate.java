@@ -58,6 +58,7 @@ public class Triangulate {
 	 * @return Verdadero si el punto p se encuentra dentro de la circunferencia
 	 *         circunscrita del triangulo t
 	 */
+	/* TODO Construir la circunferencia circuncrita en la clase Triangulo */
 	private static boolean circumCircle(Point p, Triangle t, Point circle) {
 
 		float m1, m2, mx1, mx2, my1, my2;
@@ -101,10 +102,7 @@ public class Triangulate {
 		dx = p.x - circle.x;
 		dy = p.y - circle.y;
 		drsqr = dx * dx + dy * dy;
-		/*
-		 * MUST FIX! Sets the circumcenter of triangle. This should not be done here. The
-		 * circumcenter should be defined during triangle construction.
-		 */
+
 		t.circumcenter = circle;
 		return drsqr <= rsqr;
 	}
@@ -136,17 +134,15 @@ public class Triangulate {
 		/*
 		 * Construye el supertriangulo. Todos los puntos del plano se encuentran
 		 * dentro de este. Es el primer triangulo de la lista. Al final del
-		 * proceso se eliminara.
-		 */
-		Triangle superTriangle = new Triangle();
-		/*
-		 * This points are made for a 600 x 600 window. You may want to modify
-		 * them for a larger window. The triangle has to be really huge in
-		 * comparison to the points or it will not work correctly.
-		 */
-		superTriangle.p1 = new Point(-3700, 0);
-		superTriangle.p2 = new Point(300, 5000);
-		superTriangle.p3 = new Point(4300, 0);
+		 * proceso se eliminara. El tamaño debe ser lo más grande posible. Este
+		 * esta pensado para una ventana de 600x600. Si se utiliza una ventana
+		 * más grande, aumentar el tamaño.
+		 * TODO: Hacerlo dinámico.
+		 */		
+		Point p1 = new Point(-3700, 0);
+		Point p2 = new Point(300, 5000);
+		Point p3 = new Point(4300, 0);
+		Triangle superTriangle = new Triangle(p1, p2, p3);
 		triangles.add(superTriangle);
 
 		/*

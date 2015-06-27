@@ -10,7 +10,6 @@ public class Window extends JFrame {
 
 	public TriangulationPanel panel;
 	
-	
 	public Window() {
 		super("Triangulacion Delaunay");
 		setLayout(new BorderLayout(20, 20));
