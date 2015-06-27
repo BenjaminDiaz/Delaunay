@@ -23,8 +23,8 @@ public class Triangulate {
 
 	private static final float EPSILON = (float) Math.ulp(1.0);
 
-	/* Version propia de la libreria Java de MergeSort */
-	private static class XComparator implements Comparator<Point> {
+	/* Comparador de orden ascendente basado en el eje x */
+	public static class XComparator implements Comparator<Point> {
 
 		public int compare(Point p1, Point p2) {
 			if (p1.x < p2.x) {
@@ -38,12 +38,12 @@ public class Triangulate {
 	}
 
 	/**
-	 * Revisa si un punto p se encuentra dentro de la circunferencia circunscrita de un
-	 * triangulo t. Si el punto se encuentra justo en el borde de la
-	 * circunferencia se considerara dentro del circulo. Asi se evitan esos
-	 * casos particulares. El proceso se realiza mediante la obtencion de la
-	 * determinante de una matriz compuesta por los vertices del triangulo y el
-	 * punto a revisar. Mayor info en
+	 * Revisa si un punto p se encuentra dentro de la circunferencia
+	 * circunscrita de un triangulo t. Si el punto se encuentra justo en el
+	 * borde de la circunferencia se considerara dentro del circulo. Asi se
+	 * evitan esos casos particulares. El proceso se realiza mediante la
+	 * obtencion de la determinante de una matriz compuesta por los vertices del
+	 * triangulo y el punto a revisar. Mayor info en
 	 * http://mathworld.wolfram.com/Circumcircle.html
 	 * 
 	 * @param p
@@ -51,9 +51,10 @@ public class Triangulate {
 	 * @param t
 	 *            El triangulo a revisar
 	 * @param circle
-	 *            El punto que servira para establecer el centro de la circunferencia
-	 *            circunscrita. Se modifica durante el proceso, por lo que no
-	 *            importa lo que contenga al ser pasado a la funcion
+	 *            El punto que servira para establecer el centro de la
+	 *            circunferencia circunscrita. Se modifica durante el proceso,
+	 *            por lo que no importa lo que contenga al ser pasado a la
+	 *            funcion
 	 * @return Verdadero si el punto p se encuentra dentro de la circunferencia
 	 *         circunscrita del triangulo t
 	 */
@@ -100,7 +101,11 @@ public class Triangulate {
 		dx = p.x - circle.x;
 		dy = p.y - circle.y;
 		drsqr = dx * dx + dy * dy;
-
+		/*
+		 * MUST FIX! Sets the circumcenter of triangle. This should not be done here. The
+		 * circumcenter should be defined during triangle construction.
+		 */
+		t.circumcenter = circle;
 		return drsqr <= rsqr;
 	}
 
@@ -121,34 +126,7 @@ public class Triangulate {
 		 */
 		Collections.sort(pointList, new XComparator());
 
-		/*
-		 * Encuentra los limites inferior y superior de los puntos en el plano.
-		 * Esto luego se utilizara para la construccion del supertriangulo
-		 * envolvente.
-		 */
-		float xmin = ((Point) pointList.get(0)).x;
-		float ymin = ((Point) pointList.get(0)).y;
-		float xmax = xmin;
-		float ymax = ymin;
-
 		Iterator<Point> pIter = pointList.iterator();
-		while (pIter.hasNext()) {
-			Point p = (Point) pIter.next();
-			if (p.x < xmin)
-				xmin = p.x;
-			if (p.x > xmax)
-				xmax = p.x;
-			if (p.y < ymin)
-				ymin = p.y;
-			if (p.y > ymax)
-				ymax = p.y;
-		}
-
-		float dx = xmax - xmin;
-		float dy = ymax - ymin;
-		float dmax = (dx > dy) ? dx : dy;
-		float xmid = (xmax + xmin) / 2.0f;
-		float ymid = (ymax + ymin) / 2.0f;
 
 		/* Triangulos */
 		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
@@ -161,9 +139,14 @@ public class Triangulate {
 		 * proceso se eliminara.
 		 */
 		Triangle superTriangle = new Triangle();
-		superTriangle.p1 = new Point(xmid - 2.0f * dmax, ymid - dmax, 0.0f);
-		superTriangle.p2 = new Point(xmid, ymid + 2.0f * dmax, 0.0f);
-		superTriangle.p3 = new Point(xmid + 2.0f * dmax, ymid - dmax, 0.0f);
+		/*
+		 * This points are made for a 600 x 600 window. You may want to modify
+		 * them for a larger window. The triangle has to be really huge in
+		 * comparison to the points or it will not work correctly.
+		 */
+		superTriangle.p1 = new Point(-3700, 0);
+		superTriangle.p2 = new Point(300, 5000);
+		superTriangle.p3 = new Point(4300, 0);
 		triangles.add(superTriangle);
 
 		/*
@@ -179,9 +162,9 @@ public class Triangulate {
 
 			/*
 			 * Prepara el buffer de aristas. Si el punto p esta dentro de la
-			 * circunferencia circunscrita del triangulo, entonces las aristas de ese
-			 * triangulo se agregan al buffer y el triangulo se elimina de la
-			 * lista de triangulos.
+			 * circunferencia circunscrita del triangulo, entonces las aristas
+			 * de ese triangulo se agregan al buffer y el triangulo se elimina
+			 * de la lista de triangulos.
 			 */
 			Point circle = new Point();
 
@@ -243,7 +226,8 @@ public class Triangulate {
 		}
 
 		/*
-		 * Remueve los triangulos que comparten vertices con el supertriangulo del inicio.
+		 * Remueve los triangulos que comparten vertices con el supertriangulo
+		 * del inicio.
 		 */
 		for (int i = triangles.size() - 1; i >= 0; i--) {
 			Triangle t = (Triangle) triangles.get(i);

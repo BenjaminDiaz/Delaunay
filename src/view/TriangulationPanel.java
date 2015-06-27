@@ -26,6 +26,7 @@ public class TriangulationPanel extends JPanel implements MouseListener {
 		triangles = new ArrayList<Triangle>();
 		addMouseListener(this);
 	}
+
 	/**
 	 * Resetea el panel. Vacia las listas de puntos y triangulos.
 	 */
@@ -46,14 +47,19 @@ public class TriangulationPanel extends JPanel implements MouseListener {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		for (int i = 0; i < points.size(); i++) {
-			g.fillOval((int)points.get(i).x-2, (int)points.get(i).y-2, 4, 4);
+			g.fillOval((int) points.get(i).x - 2, (int) points.get(i).y - 2, 4,
+					4);
 		}
 		for (int i = 0; i < triangles.size(); i++) {
 			Triangle aux = triangles.get(i);
-			g.drawLine((int)aux.p1.x, (int)aux.p1.y, (int)aux.p2.x, (int)aux.p2.y);
-			g.drawLine((int)aux.p2.x, (int)aux.p2.y, (int)aux.p3.x, (int)aux.p3.y);
-			g.drawLine((int)aux.p3.x, (int)aux.p3.y, (int)aux.p1.x, (int)aux.p1.y);
+			g.drawLine((int) aux.p1.x, (int) aux.p1.y, (int) aux.p2.x,
+					(int) aux.p2.y);
+			g.drawLine((int) aux.p2.x, (int) aux.p2.y, (int) aux.p3.x,
+					(int) aux.p3.y);
+			g.drawLine((int) aux.p3.x, (int) aux.p3.y, (int) aux.p1.x,
+					(int) aux.p1.y);
 		}
+
 	};
 
 	@Override
@@ -70,7 +76,13 @@ public class TriangulationPanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		points.add(new Point(e.getX(), e.getY()));
+		Point p = new Point(e.getX(), e.getY());
+		/* Don't allow duplicated points */
+		if (!points.contains(p)) {
+			points.add(p);
+		} else {
+			System.err.println("Duplicated points not allowed!");
+		}
 		triangulate();
 		repaint();
 	}

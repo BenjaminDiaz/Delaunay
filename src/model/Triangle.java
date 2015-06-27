@@ -7,18 +7,20 @@ package model;
  */
 public class Triangle {
 
-	public Point p1, p2, p3;
+	public Point p1, p2, p3, circumcenter;
 	
 	public Triangle() {
 		p1 = new Point();
 		p2 = new Point();
 		p3 = new Point();
+		circumcenter = new Point();
 	}
 	
 	public Triangle(Point p1, Point p2, Point p3) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
+		circumcenter = new Point();
 	}
 	/**
 	 * Revisa si un triangulo comparte un vertice con otro triangulo
